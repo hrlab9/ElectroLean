@@ -16,6 +16,7 @@
             --light-blue: #233554;
             --text-white: #E6F1FF;
             --text-gray: #8892B0;
+            --modal-overlay: rgba(10, 25, 47, 0.95);
         }
 
         * {
@@ -29,6 +30,7 @@
             background-color: var(--dark-blue);
             color: var(--text-white);
             line-height: 1.6;
+            padding-bottom: 50px;
         }
 
         .container {
@@ -39,52 +41,109 @@
 
         header {
             text-align: center;
-            margin-bottom: 30px;
-            padding: 20px 0;
+            margin-bottom: 40px;
+            padding: 30px 0;
             border-bottom: 2px solid var(--electric-blue);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 168, 232, 0.1) 50%, transparent 70%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             color: var(--neon-green);
             margin-bottom: 10px;
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        h1:hover {
+            transform: scale(1.02);
         }
 
         .subtitle {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: var(--electric-blue);
+            position: relative;
+            z-index: 1;
         }
 
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 25px;
         }
 
         .card {
-            background-color: var(--medium-blue);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-            border-left: 4px solid var(--electric-blue);
-            transition: transform 0.3s ease;
+            background: linear-gradient(145deg, var(--medium-blue), var(--dark-blue));
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            border-left: 5px solid var(--electric-blue);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--electric-blue), var(--neon-green));
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 12px 30px rgba(0, 168, 232, 0.3);
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card h2 {
             color: var(--electric-blue);
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
             display: flex;
             align-items: center;
+            transition: color 0.3s ease;
+        }
+
+        .card:hover h2 {
+            color: var(--neon-green);
         }
 
         .card h2 .material-icons {
-            margin-right: 10px;
+            margin-right: 12px;
+            font-size: 1.8rem;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover h2 .material-icons {
+            transform: rotate(10deg) scale(1.1);
         }
 
         .full-width {
@@ -94,136 +153,292 @@
         .pros-cons {
             display: flex;
             justify-content: space-between;
+            gap: 20px;
         }
 
         .pros, .cons {
             width: 48%;
+            padding: 20px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .pros:hover, .cons:hover {
+            transform: translateY(-5px);
+        }
+
+        .pros {
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .cons {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
         }
 
         .pros h3 {
             color: var(--neon-green);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
         }
 
         .cons h3 {
             color: var(--bright-yellow);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
         }
 
         .pros ul, .cons ul {
-            list-style-position: inside;
+            list-style: none;
         }
 
-        .pros li::marker {
+        .pros li, .cons li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            transition: padding-left 0.3s ease;
+        }
+
+        .pros li:hover, .cons li:hover {
+            padding-left: 30px;
+        }
+
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
             color: var(--neon-green);
+            font-weight: bold;
         }
 
-        .cons li::marker {
+        .cons li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
             color: var(--bright-yellow);
         }
 
         .chart-container {
             position: relative;
             height: 300px;
-            margin-top: 20px;
+            margin-top: 25px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .chart-container:hover {
+            background: rgba(0, 0, 0, 0.3);
         }
 
         .materials-diagram {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
             justify-content: center;
+            margin-top: 20px;
         }
 
         .material-item {
-            background-color: var(--light-blue);
-            padding: 15px;
-            border-radius: 8px;
+            background: linear-gradient(145deg, var(--light-blue), var(--medium-blue));
+            padding: 20px;
+            border-radius: 12px;
             width: 30%;
             text-align: center;
-            transition: background-color 0.3s ease;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .material-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 168, 232, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .material-item:hover::before {
+            transform: translateX(100%);
         }
 
         .material-item:hover {
-            background-color: var(--electric-blue);
-            color: var(--dark-blue);
+            transform: translateY(-8px) scale(1.05);
+            background: linear-gradient(145deg, var(--electric-blue), var(--medium-blue));
+            box-shadow: 0 10px 25px rgba(0, 168, 232, 0.4);
+            color: var(--text-white);
         }
 
         .material-item .material-icons {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
             color: var(--neon-green);
+            transition: all 0.4s ease;
         }
 
         .material-item:hover .material-icons {
-            color: var(--dark-blue);
+            color: var(--text-white);
+            transform: scale(1.2) rotate(5deg);
         }
 
         .latam-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .latam-table th, .latam-table td {
-            padding: 12px;
+            padding: 15px;
             text-align: left;
             border-bottom: 1px solid var(--light-blue);
+            transition: background-color 0.3s ease;
         }
 
         .latam-table th {
-            background-color: var(--light-blue);
-            color: var(--electric-blue);
+            background-color: var(--electric-blue);
+            color: var(--dark-blue);
+            font-weight: bold;
+        }
+
+        .latam-table tr {
+            transition: all 0.3s ease;
         }
 
         .latam-table tr:hover {
-            background-color: rgba(0, 168, 232, 0.1);
+            background-color: rgba(0, 168, 232, 0.15);
+            transform: scale(1.01);
         }
 
         .colombia-stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .stat-item {
             text-align: center;
-            padding: 15px;
-            background-color: var(--light-blue);
-            border-radius: 8px;
+            padding: 20px;
+            background: linear-gradient(145deg, var(--light-blue), var(--medium-blue));
+            border-radius: 12px;
             width: 23%;
+            min-width: 150px;
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.1) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.6s ease;
+        }
+
+        .stat-item:hover::after {
+            transform: scale(1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: var(--neon-green);
+            margin-bottom: 10px;
+            transition: all 0.4s ease;
+        }
+
+        .stat-item:hover .stat-number {
+            transform: scale(1.1);
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
         }
 
         .stat-label {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-gray);
             margin-top: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .stat-item:hover .stat-label {
+            color: var(--text-white);
         }
 
         .business-model {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 25px;
+            align-items: center;
+            flex-wrap: wrap;
         }
 
         .partner {
-            background-color: var(--light-blue);
-            padding: 15px;
-            border-radius: 8px;
+            background: linear-gradient(145deg, var(--light-blue), var(--medium-blue));
+            padding: 25px;
+            border-radius: 12px;
             width: 30%;
             text-align: center;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .partner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--electric-blue), var(--neon-green));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .partner:hover::before {
+            transform: scaleX(1);
+        }
+
+        .partner:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0, 168, 232, 0.3);
         }
 
         .partner .material-icons {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 3rem;
+            margin-bottom: 15px;
             color: var(--electric-blue);
+            transition: all 0.4s ease;
+        }
+
+        .partner:hover .material-icons {
+            color: var(--neon-green);
+            transform: rotate(15deg) scale(1.2);
         }
 
         .arrow {
@@ -231,84 +446,255 @@
             align-items: center;
             justify-content: center;
             width: 5%;
+            min-width: 50px;
         }
 
         .arrow .material-icons {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: var(--neon-green);
+            animation: pulse 2s infinite;
         }
 
-        .tabs {
-            display: flex;
-            margin-bottom: 20px;
-            background-color: var(--light-blue);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-weight: bold;
-        }
-
-        .tab.active {
-            background-color: var(--electric-blue);
-            color: var(--dark-blue);
-        }
-
-        .tab:hover:not(.active) {
-            background-color: rgba(0, 168, 232, 0.3);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
         .efficiency-bar {
-            height: 30px;
+            height: 35px;
             background-color: var(--light-blue);
-            border-radius: 15px;
-            margin-top: 10px;
+            border-radius: 20px;
+            margin-top: 15px;
             overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         .efficiency-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--electric-blue), var(--neon-green));
-            border-radius: 15px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            padding-right: 10px;
+            padding-right: 15px;
             font-weight: bold;
             color: var(--dark-blue);
+            position: relative;
+            overflow: hidden;
+            transition: width 1.5s ease-in-out;
         }
 
+        .efficiency-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
+        }
+
+        /* Mejoras para imágenes */
         .image-container {
             width: 100%;
-            height: 200px;
+            height: 250px;
             overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .image-container::after {
+            content: '🔍 Click para ampliar';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-container:hover::after {
+            opacity: 1;
+        }
+
+        .image-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 168, 232, 0.4);
         }
 
         .image-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
 
-        @media (max-width: 768px) {
+        .image-container:hover img {
+            transform: scale(1.1);
+        }
+
+        /* Modal para imágenes */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-overlay);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: white;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal:hover {
+            background: rgba(0, 168, 232, 0.8);
+            transform: rotate(90deg);
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        /* Pestañas interactivas */
+        .tabs-container {
+            margin-top: 20px;
+            background: var(--light-blue);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tabs {
+            display: flex;
+            background: linear-gradient(to right, var(--medium-blue), var(--light-blue));
+        }
+
+        .tab {
+            flex: 1;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--electric-blue), var(--neon-green));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .tab.active::before {
+            transform: scaleX(1);
+        }
+
+        .tab.active {
+            background-color: rgba(0, 168, 232, 0.2);
+            color: var(--neon-green);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: rgba(0, 168, 232, 0.1);
+            color: var(--electric-blue);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 25px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsividad mejorada */
+        @media (max-width: 992px) {
             .dashboard {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
             
             .pros-cons {
@@ -317,41 +703,147 @@
             
             .pros, .cons {
                 width: 100%;
-                margin-bottom: 15px;
             }
             
             .materials-diagram {
                 flex-direction: column;
+                align-items: center;
+            }
+            
+            .material-item {
+                width: 80%;
+                margin-bottom: 15px;
+            }
+            
+            .colombia-stats {
+                justify-content: center;
+            }
+            
+            .stat-item {
+                width: 45%;
+                margin-bottom: 15px;
+            }
+            
+            .business-model {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .partner, .arrow {
+                width: 100%;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
             }
             
             .material-item {
                 width: 100%;
             }
             
-            .colombia-stats {
-                flex-direction: column;
-            }
-            
             .stat-item {
                 width: 100%;
-                margin-bottom: 15px;
             }
             
-            .business-model {
-                flex-direction: column;
+            h1 {
+                font-size: 1.8rem;
             }
             
-            .partner, .arrow {
-                width: 100%;
-                margin-bottom: 15px;
+            .subtitle {
+                font-size: 1.1rem;
             }
+            
+            .modal-content {
+                max-width: 95%;
+                max-height: 80%;
+            }
+            
+            .close-modal {
+                top: 10px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 2rem;
+            }
+        }
+
+        /* Botón de scroll to top */
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--electric-blue);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 168, 232, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-top:hover {
+            background: var(--neon-green);
+            transform: scale(1.1);
+        }
+
+        /* Efectos de brillo para títulos */
+        .glow-text {
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        /* Separador decorativo */
+        .section-divider {
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--electric-blue), var(--neon-green), var(--electric-blue), transparent);
+            margin: 30px 0;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
+    <!-- Modal para imágenes ampliadas -->
+    <div id="imageModal" class="modal">
+        <div class="close-modal" onclick="closeModal()">&times;</div>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="Imagen ampliada">
+            <div class="image-caption" id="modalCaption"></div>
+        </div>
+    </div>
+
+    <!-- Botón de scroll to top -->
+    <div class="scroll-top" onclick="scrollToTop()">
+        <i class="material-icons">arrow_upward</i>
+    </div>
+
     <div class="container">
         <header>
-            <h1>Informe sobre Electrolineras State-of-the-Art (2026)</h1>
+            <h1 class="glow-text">Informe sobre Electrolineras State-of-the-Art (2026)</h1>
             <p class="subtitle">Análisis integral para inversionistas y clientes corporativos</p>
         </header>
 
@@ -359,12 +851,12 @@
             <!-- Sección 1: ¿Qué son las electrolineras? -->
             <div class="card full-width">
                 <h2><i class="material-icons">ev_station</i> ¿Qué son las electrolineras?</h2>
-                <div class="image-container">
+                <div class="image-container" onclick="openModal('https://sfile.chatglm.cn/images-ppt/5d595186e6d0.jpg', 'Electrolinera moderna con tecnología de carga ultra-rápida')">
                     <img src="https://sfile.chatglm.cn/images-ppt/5d595186e6d0.jpg" alt="Electrolinera moderna">
                 </div>
                 <div class="pros-cons">
                     <div class="pros">
-                        <h3>Ventajas</h3>
+                        <h3><i class="material-icons">thumb_up</i> Ventajas</h3>
                         <ul>
                             <li>Beneficios ambientales y económicos</li>
                             <li>Eficiencia energética >90%</li>
@@ -373,7 +865,7 @@
                         </ul>
                     </div>
                     <div class="cons">
-                        <h3>Desafíos</h3>
+                        <h3><i class="material-icons">warning</i> Desafíos</h3>
                         <ul>
                             <li>Tiempos de carga variables</li>
                             <li>Costos iniciales elevados</li>
@@ -382,51 +874,110 @@
                         </ul>
                     </div>
                 </div>
-                <div style="margin-top: 20px;">
-                    <h3>Eficiencia en 2026</h3>
+                <div style="margin-top: 25px;">
+                    <h3><i class="material-icons">speed</i> Eficiencia en 2026</h3>
                     <div class="efficiency-bar">
                         <div class="efficiency-fill" style="width: 92%;">92% Eficiencia</div>
                     </div>
-                    <p style="margin-top: 10px; color: var(--text-gray);">Cargadores ultra-rápidos (350kW+) permiten 80% de carga en 15-20 minutos</p>
+                    <p style="margin-top: 15px; color: var(--text-gray);">Cargadores ultra-rápidos (350kW+) permiten 80% de carga en 15-20 minutos</p>
                 </div>
             </div>
+
+            <!-- Separador decorativo -->
+            <div class="section-divider full-width"></div>
 
             <!-- Sección 2: Fabricación sostenible -->
             <div class="card full-width">
                 <h2><i class="material-icons">eco</i> Fabricación Sostenible</h2>
-                <div class="image-container">
+                <div class="image-container" onclick="openModal('https://sfile.chatglm.cn/images-ppt/11affc4f0f79.jpg', 'Materiales sostenibles para construcción de electrolineras')">
                     <img src="https://sfile.chatglm.cn/images-ppt/11affc4f0f79.jpg" alt="Materiales sostenibles">
                 </div>
-                <div class="materials-diagram">
-                    <div class="material-item">
-                        <i class="material-icons">foundation</i>
-                        <h4>Estructuras</h4>
-                        <p>Composites de cáñamo o piña</p>
+                
+                <!-- Pestañas interactivas -->
+                <div class="tabs-container">
+                    <div class="tabs">
+                        <div class="tab active" onclick="switchTab('materiales', this)">Materiales</div>
+                        <div class="tab" onclick="switchTab('beneficios', this)">Beneficios</div>
+                        <div class="tab" onclick="switchTab('estadisticas', this)">Estadísticas</div>
                     </div>
-                    <div class="material-item">
-                        <i class="material-icons">roofing</i>
-                        <h4>Cubiertas</h4>
-                        <p>Fibras de coco o cáñamo</p>
+                    
+                    <div id="materiales" class="tab-content active">
+                        <div class="materials-diagram">
+                            <div class="material-item">
+                                <i class="material-icons">foundation</i>
+                                <h4>Estructuras</h4>
+                                <p>Composites de cáñamo o piña</p>
+                                <small>Resistencia comparable al concreto</small>
+                            </div>
+                            <div class="material-item">
+                                <i class="material-icons">roofing</i>
+                                <h4>Cubiertas</h4>
+                                <p>Fibras de coco o cáñamo</p>
+                                <small>Aislamiento térmico natural</small>
+                            </div>
+                            <div class="material-item">
+                                <i class="material-icons">electrical_services</i>
+                                <h4>Cajones</h4>
+                                <p>Fibras de piña/coco/cáñamo</p>
+                                <small>Biodegradables y ligeros</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="material-item">
-                        <i class="material-icons">electrical_services</i>
-                        <h4>Cajones</h4>
-                        <p>Fibras de piña/coco/cáñamo</p>
+                    
+                    <div id="beneficios" class="tab-content">
+                        <ul style="padding: 20px;">
+                            <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                                <i class="material-icons" style="position: absolute; left: 0; color: var(--neon-green);">check_circle</i>
+                                <strong>Reducción de huella de carbono en 80%</strong>
+                                <p style="color: var(--text-gray); margin-top: 5px;">Comparado con materiales tradicionales</p>
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                                <i class="material-icons" style="position: absolute; left: 0; color: var(--neon-green);">check_circle</i>
+                                <strong>Materiales biodegradables y reciclables</strong>
+                                <p style="color: var(--text-gray); margin-top: 5px;">Ciclo de vida sostenible completo</p>
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 30px; position: relative;">
+                                <i class="material-icons" style="position: absolute; left: 0; color: var(--neon-green);">check_circle</i>
+                                <strong>Menor peso y facilidad de instalación</strong>
+                                <p style="color: var(--text-gray); margin-top: 5px;">Reduce costos de logística y mano de obra</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div id="estadisticas" class="tab-content">
+                        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--neon-green); font-weight: bold;">80%</div>
+                                <div style="color: var(--text-gray);">Reducción CO2</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--neon-green); font-weight: bold;">40%</div>
+                                <div style="color: var(--text-gray);">Menor peso</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 2.5rem; color: var(--neon-green); font-weight: bold;">100%</div>
+                                <div style="color: var(--text-gray);">Reciclable</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div style="margin-top: 20px;">
-                    <h3>Reducción de Carbono</h3>
+                
+                <div style="margin-top: 25px;">
+                    <h3><i class="material-icons">downhill_skiing</i> Reducción de Carbono</h3>
                     <div class="efficiency-bar">
                         <div class="efficiency-fill" style="width: 80%;">80% Reducción</div>
                     </div>
-                    <p style="margin-top: 10px; color: var(--text-gray);">Uso de materiales compuestos con fibras orgánicas vs. concreto tradicional</p>
+                    <p style="margin-top: 15px; color: var(--text-gray);">Uso de materiales compuestos con fibras orgánicas vs. concreto tradicional</p>
                 </div>
             </div>
+
+            <!-- Separador decorativo -->
+            <div class="section-divider full-width"></div>
 
             <!-- Sección 3: Inversión en LATAM -->
             <div class="card full-width">
                 <h2><i class="material-icons">public</i> Inversión en LATAM</h2>
-                <div class="image-container">
+                <div class="image-container" onclick="openModal('https://sfile.chatglm.cn/images-ppt/f8d9f7a56245.png', 'Mapa de inversión en electrolineras en Latinoamérica')">
                     <img src="https://sfile.chatglm.cn/images-ppt/f8d9f7a56245.png" alt="Estadísticas LATAM">
                 </div>
                 <table class="latam-table">
@@ -435,23 +986,33 @@
                             <th>País</th>
                             <th>Estaciones</th>
                             <th>Tecnología</th>
+                            <th>Crecimiento</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Brasil</td>
+                        <tr onclick="alert('Brasil lidera con inversiones en corredores eléctricos')">
+                            <td><strong>Brasil</strong></td>
                             <td>~3,800</td>
                             <td>Ultra-rápidos (350kW+)</td>
+                            <td>+25% anual</td>
                         </tr>
-                        <tr>
-                            <td>México</td>
+                        <tr onclick="alert('México enfocado en corredores turísticos')">
+                            <td><strong>México</strong></td>
                             <td>2,089</td>
                             <td>Rápidos DC</td>
+                            <td>+18% anual</td>
                         </tr>
-                        <tr>
-                            <td>Chile</td>
+                        <tr onclick="alert('Chile apuesta por electrolineras solares')">
+                            <td><strong>Chile</strong></td>
                             <td>Top 3</td>
                             <td>Rápidos y buses</td>
+                            <td>+30% anual</td>
+                        </tr>
+                        <tr onclick="alert('Colombia con rápido crecimiento en zonas urbanas')">
+                            <td><strong>Colombia</strong></td>
+                            <td>600+</td>
+                            <td>Mixto</td>
+                            <td>+60% anual</td>
                         </tr>
                     </tbody>
                 </table>
@@ -460,62 +1021,75 @@
                 </div>
             </div>
 
+            <!-- Separador decorativo -->
+            <div class="section-divider full-width"></div>
+
             <!-- Sección 4: Desarrollo en Colombia -->
             <div class="card full-width">
                 <h2><i class="material-icons">location_on</i> Desarrollo en Colombia</h2>
-                <div class="image-container">
+                <div class="image-container" onclick="openModal('https://sfile.chatglm.cn/images-ppt/87ab9f8926d3.jpg', 'Red de electrolineras en principales ciudades de Colombia')">
                     <img src="https://sfile.chatglm.cn/images-ppt/87ab9f8926d3.jpg" alt="Electrolineras en Colombia">
                 </div>
                 <div class="colombia-stats">
-                    <div class="stat-item">
+                    <div class="stat-item" onclick="alert('Más de 70,000 vehículos eléctricos circulando en Colombia')">
                         <div class="stat-number">>70K</div>
                         <div class="stat-label">EVs en Colombia</div>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">2026 estimado</small>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item" onclick="alert('Meta del gobierno colombiano para 2026')">
                         <div class="stat-number">6K</div>
                         <div class="stat-label">Puntos públicos (meta 2026)</div>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">Actual: ~1,200</small>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item" onclick="alert('Crecimiento exponencial del mercado')">
                         <div class="stat-number">60%</div>
                         <div class="stat-label">Crecimiento (2022-2026)</div>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">Compuesto anual</small>
                     </div>
-                    <div class="stat-item">
+                    <div class="stat-item" onclick="alert('Porcentaje de vehículos eléctricos vs total')">
                         <div class="stat-number">12.9%</div>
                         <div class="stat-label">Cuota mercado (2025)</div>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">Meta 2030: 30%</small>
                     </div>
                 </div>
             </div>
 
+            <!-- Separador decorativo -->
+            <div class="section-divider full-width"></div>
+
             <!-- Sección 5: Modelo de negocio win-win -->
             <div class="card full-width">
                 <h2><i class="material-icons">handshake</i> Modelo de Negocio Win-Win</h2>
-                <div class="image-container">
+                <div class="image-container" onclick="openModal('https://sfile.chatglm.cn/images-ppt/7f4168ec1f97.jpeg', 'Modelo de negocio colaborativo para electrolineras')">
                     <img src="https://sfile.chatglm.cn/images-ppt/7f4168ec1f97.jpeg" alt="Modelo de negocio">
                 </div>
                 <div class="business-model">
-                    <div class="partner">
+                    <div class="partner" onclick="alert('Anfitrión provee espacio y atrae clientes')">
                         <i class="material-icons">store</i>
                         <h4>Anfitrión</h4>
                         <p>Oxxo, Restaurantes, Malls</p>
                         <p>Aporta espacio y atrae tráfico</p>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">Sin inversión inicial</small>
                     </div>
                     <div class="arrow">
                         <i class="material-icons">arrow_forward</i>
                     </div>
-                    <div class="partner">
+                    <div class="partner" onclick="alert('Operador gestiona toda la infraestructura')">
                         <i class="material-icons">settings</i>
                         <h4>Operador</h4>
                         <p>Gestiona instalación y operaciones</p>
                         <p>Comparte ingresos</p>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">70% ingresos</small>
                     </div>
                     <div class="arrow">
                         <i class="material-icons">arrow_forward</i>
                     </div>
-                    <div class="partner">
+                    <div class="partner" onclick="alert('Beneficios medibles para ambas partes')">
                         <i class="material-icons">trending_up</i>
                         <h4>Beneficios</h4>
                         <p>Tráfico +4%</p>
                         <p>Revenue +5%</p>
+                        <small style="color: var(--text-gray); margin-top: 5px; display: block;">Retorno: 2-3 años</small>
                     </div>
                 </div>
                 <div class="chart-container">
@@ -526,6 +1100,70 @@
     </div>
 
     <script>
+        // Modal para imágenes
+        function openModal(src, caption) {
+            document.getElementById('modalImage').src = src;
+            document.getElementById('modalCaption').textContent = caption;
+            document.getElementById('imageModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Cerrar modal con ESC
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Cerrar modal haciendo clic fuera de la imagen
+        document.getElementById('imageModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+
+        // Sistema de pestañas
+        function switchTab(tabId, element) {
+            // Ocultar todos los contenidos de pestañas
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remover clase active de todas las pestañas
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar el contenido de la pestaña seleccionada
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Botón de scroll to top
+        const scrollTopBtn = document.querySelector('.scroll-top');
+
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
         // Gráfico de inversión en LATAM
         const latamCtx = document.getElementById('latamChart').getContext('2d');
         const latamChart = new Chart(latamCtx, {
@@ -536,11 +1174,11 @@
                     label: 'Número de Estaciones',
                     data: [3800, 2089, 800, 600, 35],
                     backgroundColor: [
-                        'rgba(0, 168, 232, 0.7)',
-                        'rgba(0, 255, 136, 0.7)',
-                        'rgba(255, 215, 0, 0.7)',
-                        'rgba(35, 53, 84, 0.7)',
-                        'rgba(136, 146, 176, 0.7)'
+                        'rgba(0, 168, 232, 0.8)',
+                        'rgba(0, 255, 136, 0.8)',
+                        'rgba(255, 215, 0, 0.8)',
+                        'rgba(35, 53, 84, 0.8)',
+                        'rgba(136, 146, 176, 0.8)'
                     ],
                     borderColor: [
                         'rgba(0, 168, 232, 1)',
@@ -549,7 +1187,15 @@
                         'rgba(35, 53, 84, 1)',
                         'rgba(136, 146, 176, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    hoverBackgroundColor: [
+                        'rgba(0, 168, 232, 1)',
+                        'rgba(0, 255, 136, 1)',
+                        'rgba(255, 215, 0, 1)',
+                        'rgba(35, 53, 84, 1)',
+                        'rgba(136, 146, 176, 1)'
+                    ]
                 }]
             },
             options: {
@@ -562,7 +1208,19 @@
                             color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#E6F1FF'
+                            color: '#E6F1FF',
+                            font: {
+                                size: 12
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Número de Estaciones',
+                            color: '#E6F1FF',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
                         }
                     },
                     x: {
@@ -570,14 +1228,38 @@
                             color: 'rgba(255, 255, 255, 0.1)'
                         },
                         ticks: {
-                            color: '#E6F1FF'
+                            color: '#E6F1FF',
+                            font: {
+                                size: 12
+                            }
                         }
                     }
                 },
                 plugins: {
                     legend: {
                         display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                        titleColor: '#00FF88',
+                        bodyColor: '#E6F1FF',
+                        borderColor: '#00A8E8',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return `Estaciones: ${context.raw}`;
+                            }
+                        }
                     }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeOutQuart'
                 }
             }
         });
@@ -591,31 +1273,98 @@
                 datasets: [{
                     data: [4, 5, 91],
                     backgroundColor: [
-                        'rgba(0, 168, 232, 0.7)',
-                        'rgba(0, 255, 136, 0.7)',
-                        'rgba(35, 53, 84, 0.7)'
+                        'rgba(0, 168, 232, 0.9)',
+                        'rgba(0, 255, 136, 0.9)',
+                        'rgba(35, 53, 84, 0.9)'
                     ],
                     borderColor: [
                         'rgba(0, 168, 232, 1)',
                         'rgba(0, 255, 136, 1)',
                         'rgba(35, 53, 84, 1)'
                     ],
-                    borderWidth: 1
+                    borderWidth: 2,
+                    hoverBackgroundColor: [
+                        'rgba(0, 168, 232, 1)',
+                        'rgba(0, 255, 136, 1)',
+                        'rgba(35, 53, 84, 1)'
+                    ],
+                    hoverOffset: 15
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                cutout: '65%',
                 plugins: {
                     legend: {
                         position: 'bottom',
                         labels: {
                             color: '#E6F1FF',
-                            padding: 20
+                            padding: 20,
+                            font: {
+                                size: 13
+                            },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                        titleColor: '#00FF88',
+                        bodyColor: '#E6F1FF',
+                        borderColor: '#00A8E8',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                return `${context.label}: ${context.raw}%`;
+                            }
                         }
                     }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true,
+                    duration: 2000,
+                    easing: 'easeOutQuart'
                 }
             }
+        });
+
+        // Efectos de animación al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animar barras de eficiencia
+            const efficiencyBars = document.querySelectorAll('.efficiency-fill');
+            efficiencyBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+
+            // Efecto de aparición para tarjetas
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+
+            // Agregar tooltips interactivos
+            const statItems = document.querySelectorAll('.stat-item, .material-item, .partner');
+            statItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.zIndex = '1';
+                });
+            });
         });
     </script>
 </body>
