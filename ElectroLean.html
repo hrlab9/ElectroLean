@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe sobre Electrolineras State-of-the-Art (2026)</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --electric-blue: #00A8E8;
+            --neon-green: #00FF88;
+            --bright-yellow: #FFD700;
+            --dark-blue: #0A192F;
+            --medium-blue: #112240;
+            --light-blue: #233554;
+            --text-white: #E6F1FF;
+            --text-gray: #8892B0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-blue);
+            color: var(--text-white);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid var(--electric-blue);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--electric-blue);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--medium-blue);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--electric-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--electric-blue);
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 .material-icons {
+            margin-right: 10px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .pros-cons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pros, .cons {
+            width: 48%;
+        }
+
+        .pros h3 {
+            color: var(--neon-green);
+            margin-bottom: 10px;
+        }
+
+        .cons h3 {
+            color: var(--bright-yellow);
+            margin-bottom: 10px;
+        }
+
+        .pros ul, .cons ul {
+            list-style-position: inside;
+        }
+
+        .pros li::marker {
+            color: var(--neon-green);
+        }
+
+        .cons li::marker {
+            color: var(--bright-yellow);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .materials-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .material-item {
+            background-color: var(--light-blue);
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+
+        .material-item:hover {
+            background-color: var(--electric-blue);
+            color: var(--dark-blue);
+        }
+
+        .material-item .material-icons {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--neon-green);
+        }
+
+        .material-item:hover .material-icons {
+            color: var(--dark-blue);
+        }
+
+        .latam-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .latam-table th, .latam-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--light-blue);
+        }
+
+        .latam-table th {
+            background-color: var(--light-blue);
+            color: var(--electric-blue);
+        }
+
+        .latam-table tr:hover {
+            background-color: rgba(0, 168, 232, 0.1);
+        }
+
+        .colombia-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            width: 23%;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--neon-green);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-top: 5px;
+        }
+
+        .business-model {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .partner {
+            background-color: var(--light-blue);
+            padding: 15px;
+            border-radius: 8px;
+            width: 30%;
+            text-align: center;
+        }
+
+        .partner .material-icons {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--electric-blue);
+        }
+
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 5%;
+        }
+
+        .arrow .material-icons {
+            font-size: 2rem;
+            color: var(--neon-green);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: var(--light-blue);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .tab.active {
+            background-color: var(--electric-blue);
+            color: var(--dark-blue);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: rgba(0, 168, 232, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .efficiency-bar {
+            height: 30px;
+            background-color: var(--light-blue);
+            border-radius: 15px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .efficiency-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--electric-blue), var(--neon-green));
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-weight: bold;
+            color: var(--dark-blue);
+        }
+
+        .image-container {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .pros-cons {
+                flex-direction: column;
+            }
+            
+            .pros, .cons {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .materials-diagram {
+                flex-direction: column;
+            }
+            
+            .material-item {
+                width: 100%;
+            }
+            
+            .colombia-stats {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .business-model {
+                flex-direction: column;
+            }
+            
+            .partner, .arrow {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Informe sobre Electrolineras State-of-the-Art (2026)</h1>
+            <p class="subtitle">Análisis integral para inversionistas y clientes corporativos</p>
+        </header>
+
+        <div class="dashboard">
+            <!-- Sección 1: ¿Qué son las electrolineras? -->
+            <div class="card full-width">
+                <h2><i class="material-icons">ev_station</i> ¿Qué son las electrolineras?</h2>
+                <div class="image-container">
+                    <img src="https://sfile.chatglm.cn/images-ppt/5d595186e6d0.jpg" alt="Electrolinera moderna">
+                </div>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h3>Ventajas</h3>
+                        <ul>
+                            <li>Beneficios ambientales y económicos</li>
+                            <li>Eficiencia energética >90%</li>
+                            <li>Innovaciones: carga bidireccional (V2G)</li>
+                            <li>Carga ultra-rápida (80% en 15-20 min)</li>
+                        </ul>
+                    </div>
+                    <div class="cons">
+                        <h3>Desafíos</h3>
+                        <ul>
+                            <li>Tiempos de carga variables</li>
+                            <li>Costos iniciales elevados</li>
+                            <li>Dependencia de infraestructura</li>
+                            <li>Ansiedad por rango</li>
+                        </ul>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3>Eficiencia en 2026</h3>
+                    <div class="efficiency-bar">
+                        <div class="efficiency-fill" style="width: 92%;">92% Eficiencia</div>
+                    </div>
+                    <p style="margin-top: 10px; color: var(--text-gray);">Cargadores ultra-rápidos (350kW+) permiten 80% de carga en 15-20 minutos</p>
+                </div>
+            </div>
+
+            <!-- Sección 2: Fabricación sostenible -->
+            <div class="card full-width">
+                <h2><i class="material-icons">eco</i> Fabricación Sostenible</h2>
+                <div class="image-container">
+                    <img src="https://sfile.chatglm.cn/images-ppt/11affc4f0f79.jpg" alt="Materiales sostenibles">
+                </div>
+                <div class="materials-diagram">
+                    <div class="material-item">
+                        <i class="material-icons">foundation</i>
+                        <h4>Estructuras</h4>
+                        <p>Composites de cáñamo o piña</p>
+                    </div>
+                    <div class="material-item">
+                        <i class="material-icons">roofing</i>
+                        <h4>Cubiertas</h4>
+                        <p>Fibras de coco o cáñamo</p>
+                    </div>
+                    <div class="material-item">
+                        <i class="material-icons">electrical_services</i>
+                        <h4>Cajones</h4>
+                        <p>Fibras de piña/coco/cáñamo</p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <h3>Reducción de Carbono</h3>
+                    <div class="efficiency-bar">
+                        <div class="efficiency-fill" style="width: 80%;">80% Reducción</div>
+                    </div>
+                    <p style="margin-top: 10px; color: var(--text-gray);">Uso de materiales compuestos con fibras orgánicas vs. concreto tradicional</p>
+                </div>
+            </div>
+
+            <!-- Sección 3: Inversión en LATAM -->
+            <div class="card full-width">
+                <h2><i class="material-icons">public</i> Inversión en LATAM</h2>
+                <div class="image-container">
+                    <img src="https://sfile.chatglm.cn/images-ppt/f8d9f7a56245.png" alt="Estadísticas LATAM">
+                </div>
+                <table class="latam-table">
+                    <thead>
+                        <tr>
+                            <th>País</th>
+                            <th>Estaciones</th>
+                            <th>Tecnología</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Brasil</td>
+                            <td>~3,800</td>
+                            <td>Ultra-rápidos (350kW+)</td>
+                        </tr>
+                        <tr>
+                            <td>México</td>
+                            <td>2,089</td>
+                            <td>Rápidos DC</td>
+                        </tr>
+                        <tr>
+                            <td>Chile</td>
+                            <td>Top 3</td>
+                            <td>Rápidos y buses</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="chart-container">
+                    <canvas id="latamChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Sección 4: Desarrollo en Colombia -->
+            <div class="card full-width">
+                <h2><i class="material-icons">location_on</i> Desarrollo en Colombia</h2>
+                <div class="image-container">
+                    <img src="https://sfile.chatglm.cn/images-ppt/87ab9f8926d3.jpg" alt="Electrolineras en Colombia">
+                </div>
+                <div class="colombia-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">>70K</div>
+                        <div class="stat-label">EVs en Colombia</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">6K</div>
+                        <div class="stat-label">Puntos públicos (meta 2026)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">60%</div>
+                        <div class="stat-label">Crecimiento (2022-2026)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">12.9%</div>
+                        <div class="stat-label">Cuota mercado (2025)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección 5: Modelo de negocio win-win -->
+            <div class="card full-width">
+                <h2><i class="material-icons">handshake</i> Modelo de Negocio Win-Win</h2>
+                <div class="image-container">
+                    <img src="https://sfile.chatglm.cn/images-ppt/7f4168ec1f97.jpeg" alt="Modelo de negocio">
+                </div>
+                <div class="business-model">
+                    <div class="partner">
+                        <i class="material-icons">store</i>
+                        <h4>Anfitrión</h4>
+                        <p>Oxxo, Restaurantes, Malls</p>
+                        <p>Aporta espacio y atrae tráfico</p>
+                    </div>
+                    <div class="arrow">
+                        <i class="material-icons">arrow_forward</i>
+                    </div>
+                    <div class="partner">
+                        <i class="material-icons">settings</i>
+                        <h4>Operador</h4>
+                        <p>Gestiona instalación y operaciones</p>
+                        <p>Comparte ingresos</p>
+                    </div>
+                    <div class="arrow">
+                        <i class="material-icons">arrow_forward</i>
+                    </div>
+                    <div class="partner">
+                        <i class="material-icons">trending_up</i>
+                        <h4>Beneficios</h4>
+                        <p>Tráfico +4%</p>
+                        <p>Revenue +5%</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="benefitsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Gráfico de inversión en LATAM
+        const latamCtx = document.getElementById('latamChart').getContext('2d');
+        const latamChart = new Chart(latamCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Brasil', 'México', 'Chile', 'Colombia', 'Otros'],
+                datasets: [{
+                    label: 'Número de Estaciones',
+                    data: [3800, 2089, 800, 600, 35],
+                    backgroundColor: [
+                        'rgba(0, 168, 232, 0.7)',
+                        'rgba(0, 255, 136, 0.7)',
+                        'rgba(255, 215, 0, 0.7)',
+                        'rgba(35, 53, 84, 0.7)',
+                        'rgba(136, 146, 176, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(0, 168, 232, 1)',
+                        'rgba(0, 255, 136, 1)',
+                        'rgba(255, 215, 0, 1)',
+                        'rgba(35, 53, 84, 1)',
+                        'rgba(136, 146, 176, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#E6F1FF'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        },
+                        ticks: {
+                            color: '#E6F1FF'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Gráfico de beneficios del modelo win-win
+        const benefitsCtx = document.getElementById('benefitsChart').getContext('2d');
+        const benefitsChart = new Chart(benefitsCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Aumento de Tráfico (+4%)', 'Incremento de Revenue (+5%)', 'Otros Beneficios'],
+                datasets: [{
+                    data: [4, 5, 91],
+                    backgroundColor: [
+                        'rgba(0, 168, 232, 0.7)',
+                        'rgba(0, 255, 136, 0.7)',
+                        'rgba(35, 53, 84, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(0, 168, 232, 1)',
+                        'rgba(0, 255, 136, 1)',
+                        'rgba(35, 53, 84, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#E6F1FF',
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
